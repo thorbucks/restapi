@@ -15,7 +15,9 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
-    
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+
     def __str__(self):
         return self.username
 
@@ -24,6 +26,11 @@ class User(AbstractUser):
         Ensures that the user has no more than one pending order.
         """
         return self.orders.filter(status='Pending').exists()
+    
+    @property
+    def full_name(self):
+        """ Returns the user's full name """
+        return f"{self.first_name} {self.last_name}"
 
 
 class Order(models.Model):
@@ -45,5 +52,3 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} - {self.status}"
-
-
