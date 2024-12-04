@@ -40,13 +40,13 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
     ]
     
-    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    user_order = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if self.status == 'Pending' and self.user.has_pending_order():
+        if self.status == 'Pending' and self.user_order.has_pending_order():
             raise ValueError("A user can have only one pending order at a time.")
         super().save(*args, **kwargs)
 
